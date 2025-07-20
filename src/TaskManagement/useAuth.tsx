@@ -12,6 +12,7 @@ export interface LoggedInUser {
     {
       id: string | number;
       name: string;
+      code: string;
     }
   ];
 }

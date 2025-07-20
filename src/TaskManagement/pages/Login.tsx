@@ -43,15 +43,18 @@ const LoginPage = () => {
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
             <img
-              src="/icons8-task-pastel-color-96.png"
+              src="/cotton.png"
               alt="Logo"
               className="w-16 h-16 sm:w-20 sm:h-20 mb-4 animate-bounce"
             />
             <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2 text-center">
-            Task Management
+            The Cotton Field
           </h2>
+          <p className="text-gray-500 text-center">
+            A simple Task Management Web App
+          </p>
           <p className="text-gray-500 text-center">Sign in to your account</p>
           <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mt-2"></div>
         </div>

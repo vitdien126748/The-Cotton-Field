@@ -21,8 +21,22 @@ const TasksPage = () => {
   };
   const navigate = useNavigate();
 
-  const isAllowedRole = loggedInUser?.roles.some(
-    (role) => role.name === "Administrators"
+  // Get user roles array for permission checking
+  const userRoles =
+    loggedInUser?.roles?.map((role) => role.code?.toLowerCase()) || [];
+
+  // Permission checks based on routes configuration
+  const canAccessTasks = userRoles.some((role) =>
+    ["managers", "leaders", "administrators"].includes(role)
+  );
+  const canViewTasks = userRoles.some((role) =>
+    ["users", "managers", "leaders", "administrators", "members"].includes(role)
+  );
+  const canEditTasks = userRoles.some((role) =>
+    ["managers", "leaders", "administrators"].includes(role)
+  );
+  const canDeleteTasks = userRoles.some((role) =>
+    ["managers", "leaders", "administrators"].includes(role)
   );
 
   React.useEffect(() => {
@@ -34,8 +48,34 @@ const TasksPage = () => {
         console.error("Failed to fetch tasks:", error);
       }
     };
-    fetchTasks();
-  }, []);
+    if (loggedInUser && canAccessTasks) {
+      fetchTasks();
+    }
+  }, [loggedInUser, canAccessTasks]);
+
+  // If user doesn't have permission to access Tasks page, show access denied
+  if (!canAccessTasks) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-xl max-w-md">
+          <div className="text-6xl mb-4">🚫</div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Access Denied
+          </h2>
+          <p className="text-gray-600 mb-4">
+            You don't have permission to access the Tasks page. This page is
+            restricted to managers, leaders, and administrators.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Go to Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleOnSearch = (filters: { status?: string; priority?: string }) => {
     setFilters({
@@ -195,44 +235,46 @@ const TasksPage = () => {
                     <td className="px-4 py-4">
                       <div className="flex gap-2">
                         <button
-                          disabled={!isAllowedRole}
+                          disabled={!canViewTasks}
                           onClick={() => navigate(`/view-task/${task.id}`)}
                           className={`p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 hover:scale-110 transition-all duration-200 shadow-sm ${
-                            !isAllowedRole
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
+                            !canViewTasks ? "opacity-50 cursor-not-allowed" : ""
                           }`}
-                          title="View Task"
+                          title={
+                            canViewTasks ? "View Task" : "No permission to view"
+                          }
                         >
                           <EyeIcon className="w-4 h-4" />
                         </button>
                         <button
-                          disabled={!isAllowedRole}
+                          disabled={!canEditTasks}
                           onClick={() => navigate(`/update-task/${task.id}`)}
                           className={`p-2 rounded-full bg-yellow-100 text-yellow-700 hover:bg-yellow-200 hover:scale-110 transition-all duration-200 shadow-sm ${
-                            !isAllowedRole
-                              ? "opacity-50 cursor-not-allowed"
-                              : ""
+                            !canEditTasks ? "opacity-50 cursor-not-allowed" : ""
                           }`}
-                          title="Edit Task"
+                          title={
+                            canEditTasks ? "Edit Task" : "No permission to edit"
+                          }
                         >
                           <PencilSquareIcon className="w-4 h-4" />
                         </button>
                         <button
-                          disabled={!isAllowedRole}
+                          disabled={!canDeleteTasks}
                           onClick={() => {
                             if (typeof task.id === "number") {
                               handleDeleteTask(task.id);
-                            } else {
-                              alert("Task ID is missing.");
                             }
                           }}
                           className={`p-2 rounded-full bg-red-100 text-red-600 hover:bg-red-200 hover:scale-110 transition-all duration-200 shadow-sm ${
-                            !isAllowedRole
+                            !canDeleteTasks
                               ? "opacity-50 cursor-not-allowed"
                               : ""
                           }`}
-                          title="Delete Task"
+                          title={
+                            canDeleteTasks
+                              ? "Delete Task"
+                              : "No permission to delete"
+                          }
                         >
                           <TrashIcon className="w-4 h-4" />
                         </button>

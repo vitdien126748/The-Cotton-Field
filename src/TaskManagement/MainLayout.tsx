@@ -7,6 +7,7 @@ import {
   ListBulletIcon,
   ClipboardDocumentListIcon,
   ArrowRightOnRectangleIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 
 import routes from "./routes";
@@ -30,6 +31,8 @@ export default function MainLayout() {
         return <ListBulletIcon className="w-5 h-5" />;
       case "my tasks":
         return <ClipboardDocumentListIcon className="w-5 h-5" />;
+      case "create task":
+        return <PlusIcon className="w-5 h-5" />;
       default:
         return <HomeIcon className="w-5 h-5" />;
     }
@@ -47,12 +50,12 @@ export default function MainLayout() {
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="h-10 w-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">TM</span>
+                      <img src="/cotton.png" alt="logo" />
                     </div>
                   </div>
                   <div className="ml-3">
                     <h1 className="text-xl font-bold text-gray-900">
-                      Task Management
+                      The Cotton Field
                     </h1>
                   </div>
                 </div>
